@@ -1,0 +1,12 @@
+QUIT = 'quit'
+NICKNAME = '/nickname'
+PRIVATE = '/private'
+DELAY = '/delay'
+COMPLAIN = '/complain'
+GREETING = ('Добро пожаловать в чат \n'
+           'Чтобы указать Ваш nickname, введите команду /nickname <your nickname> \n'
+           'Чтобы отправить приватное сообщение, введите команду /private <nickname> <message> \n'
+           'Чтобы забанить юзера, введите команду /complain <nickname> \n'
+           'Чтобы отправить сообщение с задержкой, введите команду /delay <minutes> <message> \n'
+           'Чтобы выйти из чата, введите команду /quit. \n'
+        )
