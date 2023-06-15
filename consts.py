@@ -1,4 +1,4 @@
-QUIT = 'quit'
+QUIT = '/quit'
 NICKNAME = '/nickname'
 PRIVATE = '/private'
 DELAY = '/delay'
