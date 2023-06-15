@@ -4,22 +4,25 @@ from asyncio import AbstractEventLoop, StreamReader, StreamWriter
 from typing import Optional
 
 from logger import get_logger
+from settings import Settings
+
 
 logger = get_logger(__name__)
+settings = Settings()
 
 
 class Client:
     def __init__(
         self,
         loop: AbstractEventLoop,
-        ip: str = '127.0.0.1',
-        port: int = 8000
+        ip: settings.IP,
+        port: settings.PORT
     ):
         self._ip: str = ip
         self._port: int = port
         self._abstract_event_loop: AbstractEventLoop = loop
-        self._stream_reader: StreamReader = None
-        self._stream_writer: StreamWriter = None
+        self._stream_reader: Optional[StreamReader] = None
+        self._stream_writer: Optional[StreamWriter] = None
 
     @property
     def server_ip(self):
@@ -46,8 +49,8 @@ class Client:
             self._stream_reader, self._stream_writer = await asyncio.open_connection(self.server_ip, self.server_port)
             await asyncio.gather(self.get_messages_from_server(), self.start_chat())
             logger.info('Соединение установлено.')
-        except Exception as ex:
-            logger.error('Произошла ошибка: ', {ex})
+        except ConnectionError as ex:
+            logger.debug('Произошла ошибка: %s', ex, exc_info=1)
         logger.info('Соединение с сервером прервано')
 
     async def get_message(self):
@@ -65,7 +68,7 @@ class Client:
             logger.info('Цикл остановлен.')
 
     async def start_chat(self):
-        message: str = None
+        message: Optional[str] = None
         while message != '/quit':
             message = await ainput('')
             self.writer.write(message.encode('utf8'))
@@ -79,5 +82,5 @@ class Client:
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    client = Client(loop)
+    client = Client(loop, settings.IP, settings.PORT)
     asyncio.run(client.connect_to_server())
