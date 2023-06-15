@@ -1,5 +1,6 @@
 from asyncio import StreamReader, StreamWriter
 from datetime import datetime
+from typing import Optional
 
 
 class ClientModel:
@@ -9,8 +10,8 @@ class ClientModel:
         self.ip: str = writer.get_extra_info('peername')[0]
         self.port: int = writer.get_extra_info('peername')[1]
         self.nickname: str = str(writer.get_extra_info('peername'))
-        self.ban_date: datetime = None
-        self.first_message_date: datetime = None
+        self.ban_date: Optional[datetime] = None
+        self.first_message_date: Optional[datetime] = None
         self.amount_of_complaints: int = 0
         self.amount_of_messages: int = 0
 
