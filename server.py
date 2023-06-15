@@ -6,16 +6,18 @@ from threading import Timer
 from consts import QUIT, NICKNAME, PRIVATE, DELAY, COMPLAIN, GREETING
 from models import ClientModel
 from logger import get_logger
+from settings import Settings
 
 
 logger = get_logger(__name__)
+settings = Settings()
 
 
 class Server:
     def __init__(
         self,
-        ip: str = '127.0.0.1',
-        port: int = 8000
+        ip: settings.IP,
+        port: settings.PORT
     ):
         self._ip: str = ip
         self._port: int = port
@@ -154,10 +156,12 @@ class Server:
             self.send_message_at(client_model, msg)
         elif msg.startswith(PRIVATE):
             self.send_private_message(client_model, msg)
+        elif msg.startswith(QUIT):
+            self.disconnect_client(client_model, msg)
         else:
             client_model.send_message('Такой команды не существует...\n'.encode('utf8'))
 
 
 if __name__ == '__main__':
-    server = Server()
+    server = Server(settings.IP, settings.PORT)
     asyncio.run(server.run())
