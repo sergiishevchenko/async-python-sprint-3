@@ -148,18 +148,20 @@ class Server:
 
     def handle_commands(self, client_model: ClientModel, msg: str):
         msg = msg.replace('\n', '').replace('\r', '')
-        if msg.startswith(NICKNAME):
-            self.set_new_nickname(client_model, msg)
-        elif msg.startswith(COMPLAIN):
-            self.complain_to_user(client_model, msg)
-        elif msg.startswith(DELAY):
-            self.send_message_at(client_model, msg)
-        elif msg.startswith(PRIVATE):
-            self.send_private_message(client_model, msg)
-        elif msg.startswith(QUIT):
-            self.disconnect_client(client_model, msg)
-        else:
-            client_model.send_message('Такой команды не существует...\n'.encode('utf8'))
+
+        match msg:
+            case msg if msg.startswith(NICKNAME):
+                self.set_new_nickname(client_model, msg)
+            case msg if msg.startswith(COMPLAIN):
+                self.complain_to_user(client_model, msg)
+            case msg if msg.startswith(DELAY):
+                self.send_message_at(client_model, msg)
+            case msg if msg.startswith(PRIVATE):
+                self.send_private_message(client_model, msg)
+            case msg if msg.startswith(QUIT):
+                self.disconnect_client(client_model, msg)
+            case _:
+                client_model.send_message('Такой команды не существует...\n'.encode('utf8'))
 
 
 if __name__ == '__main__':
